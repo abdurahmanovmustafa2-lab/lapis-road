@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lapis Road · Hosts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Literata:wght@400;600&display=swap">
+<style>
+:root{--bg:#f3f6f8;--fg:#14202b;--mut:#4d5c69;--line:#c9d3db;--panel:#e6edf2;--acc:#c77a0e;--accbg:#f0a23a;--accfg:#14202b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1820;--fg:#e8eef3;--mut:#9fb0be;--line:#2a3b49;--panel:#16232e;--acc:#f0a23a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.6 Literata,Georgia,serif}
+h1,h2,button,label,select,input,textarea{font-family:"Bricolage Grotesque",Arial,sans-serif}
+.w{max-width:680px;margin:0 auto;padding:0 20px 60px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0 0;gap:12px}
+.top a{color:var(--fg);font:700 15px "Bricolage Grotesque",Arial,sans-serif}
+.lg button{font:700 14px "Bricolage Grotesque",Arial;background:transparent;color:var(--fg);border:2px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.lg button[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+h1{font-size:clamp(32px,9vw,52px);line-height:1.05;margin:30px 0 12px;letter-spacing:-.03em;font-weight:800}
+.sub{color:var(--mut);margin:0 0 18px}
+label{display:block;font-weight:700;font-size:15px;margin:14px 0 6px}
+input,select,textarea{width:100%;font-size:17px;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg)}
+textarea{min-height:90px}
+.btn{font:700 17px "Bricolage Grotesque",Arial;background:var(--accbg);color:var(--accfg);border:0;border-radius:999px;padding:14px 26px;margin-top:20px;cursor:pointer}
+.btn:disabled{opacity:.6}
+.note{background:var(--panel);border-radius:12px;padding:12px 16px;color:var(--mut);font-size:15px;margin:14px 0}
+.err{color:#c0392b;font-weight:700}
+.post{border-top:1px solid var(--line);padding:18px 0}
+.post p{margin:0 0 6px;white-space:pre-wrap}
+.when{color:var(--mut);font-size:14px}
+.st button{font-size:20px;background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:6px 12px;margin:8px 8px 0 0;cursor:pointer;color:var(--fg)}
+.st button[aria-pressed=true]{border-color:var(--acc)}
+.st small{font:700 14px Arial;margin-left:4px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body><div class="w">
+<div class="top"><a href="#" id="back">← Lapis Road</a><div class="lg"><button data-l="ru">RU</button> <button data-l="en">EN</button></div></div>
+
+<div id="join">
+<h1 data-k="h1"></h1><p class="sub" data-k="sub"></p>
+<label for="fo" data-k="fo"></label><input id="fo" autocomplete="name">
+<label for="fp" data-k="fp"></label><input id="fp">
+<label for="ft" data-k="ft"></label>
+<select id="ft"><option value="Hotel" data-k="o1"></option><option value="Guesthouse / homestay" data-k="o2"></option><option value="Dacha" data-k="o3"></option><option value="Guide" data-k="o4"></option></select>
+<label for="fr" data-k="fr"></label><select id="fr"></select>
+<label for="fl" data-k="fl"></label><input id="fl">
+<label for="fc" data-k="fc"></label><input id="fc" inputmode="text">
+<label for="fw" data-k="fw"></label><input id="fw" inputmode="tel">
+<label for="fg" data-k="fg"></label><input id="fg">
+<label for="fa" data-k="fa"></label><textarea id="fa"></textarea>
+<button class="btn" id="go" type="button" data-k="send"></button>
+<p class="err" id="er" hidden></p>
+</div>
+
+<div id="feed" hidden>
+<h1 data-k="h2"></h1>
+<p class="note" id="thanks" data-k="thanks" hidden></p>
+<div id="posts"></div>
+<button class="btn" id="rf" type="button" data-k="refresh"></button>
+</div>
+</div>
+<script>
+var API="https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev",MAIN="https://claude.ai/artifact/X35wR5AWTqE99mg4Y8wVjD";
+var R=["Dushanbe","Hissar","Sughd and Penjikent","Fann Mountains","Khorog and Pamir","Wakhan"],EM=["👍","❤️","🙏","😊","🤔","👎"];
+var L={
+en:{h1:"Join our host team.",sub:"We bring travelers to Tajikistan’s ancient and historic places. Run a hotel, guesthouse, homestay or dacha, or work as a guide? Work with us.",
+fo:"Your name",fp:"Name of your place or business",ft:"Type",o1:"Hotel",o2:"Guesthouse or homestay",o3:"Dacha",o4:"Guide",fr:"Region",fl:"Town or village",fc:"Price (for example $30 per night)",fw:"WhatsApp number",fg:"Telegram username (optional)",fa:"About you in a few words",send:"Register",
+err:"Please fill in your name, place, price and WhatsApp number.",neterr:"Could not send. Please try again.",h2:"Messages from Lapis Road",thanks:"Thank you! We will review your request. You can already read our messages here.",refresh:"Refresh",empty:"No messages yet."},
+ru:{h1:"Присоединяйтесь к нашей команде.",sub:"Мы возим путешественников по древним и историческим местам Таджикистана. У вас отель, гостевой дом, хоумстей, дача, или вы гид? Работайте с нами.",
+fo:"Ваше имя",fp:"Название места или бизнеса",ft:"Тип",o1:"Отель",o2:"Гостевой дом или хоумстей",o3:"Дача",o4:"Гид",fr:"Регион",fl:"Город или село",fc:"Цена (например $30 за ночь)",fw:"Номер WhatsApp",fg:"Имя в Telegram (по желанию)",fa:"Коротко о вас",send:"Зарегистрироваться",
+err:"Укажите имя, название, цену и номер WhatsApp.",neterr:"Не удалось отправить. Попробуйте ещё раз.",h2:"Сообщения от Lapis Road",thanks:"Спасибо! Мы рассмотрим вашу заявку. Сообщения от нас можно читать уже сейчас.",refresh:"Обновить",empty:"Сообщений пока нет."}};
+var $=function(i){return document.getElementById(i)},cur="ru";
+function setL(l){cur=l;document.documentElement.lang=l;document.querySelectorAll("[data-k]").forEach(function(e){e.textContent=L[l][e.dataset.k]});
+ document.querySelectorAll(".lg button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.l===l?"true":"false")});try{localStorage.setItem("lang",l)}catch(e){}}
+document.querySelectorAll(".lg button").forEach(function(b){b.onclick=function(){setL(b.dataset.l)}});
+$("back").href=MAIN;$("fr").innerHTML=R.map(function(x){return"<option>"+x+"</option>"}).join("");
+var s="ru";try{s=localStorage.getItem("lang")||((navigator.language||"").slice(0,2)==="en"?"en":"ru")}catch(e){}setL(s==="en"?"en":"ru");
+function pid(){try{return localStorage.getItem("lr_pid")}catch(e){return null}}
+function openFeed(thanks){$("join").hidden=true;$("feed").hidden=false;$("thanks").hidden=!thanks;load()}
+function load(){var id=pid();if(!id||API.indexOf("http")!==0)return;
+ fetch(API+"/feed?pid="+encodeURIComponent(id)).then(function(r){if(!r.ok)throw r.status;return r.json()}).then(draw).catch(function(){})}
+function draw(d){var box=$("posts");box.textContent="";
+ if(!d.posts.length){var p=document.createElement("p");p.className="when";p.textContent=L[cur].empty;box.appendChild(p);return}
+ d.posts.forEach(function(m){var a=document.createElement("div");a.className="post";
+  var t=document.createElement("p");t.textContent=m.text;var w=document.createElement("div");w.className="when";w.textContent=new Date(m.t).toLocaleString();
+  var st=document.createElement("div");st.className="st";
+  EM.forEach(function(e){var b=document.createElement("button");b.type="button";b.setAttribute("aria-pressed",m.mine===e?"true":"false");b.textContent=e;
+   var n=m.counts[e];if(n){var c=document.createElement("small");c.textContent=n;b.appendChild(c)}
+   b.onclick=function(){fetch(API+"/react",{method:"POST",body:JSON.stringify({pid:pid(),post:m.id,emoji:e})}).then(load)};st.appendChild(b)});
+  a.appendChild(t);a.appendChild(w);a.appendChild(st);box.appendChild(a)})}
+$("rf").onclick=load;
+$("go").onclick=function(){var v=function(i){return $(i).value.trim()};
+ if(!v("fo")||!v("fp")||!v("fc")||!v("fw")){$("er").hidden=false;$("er").textContent=L[cur].err;return}
+ $("go").disabled=true;$("er").hidden=true;
+ fetch(API+"/partner",{method:"POST",body:JSON.stringify({type:v("ft"),name:v("fp"),owner:v("fo"),region:v("fr"),place:v("fl"),price:v("fc"),wa:v("fw"),tg:v("fg"),about:v("fa")})})
+ .then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{localStorage.setItem("lr_pid",d.id)}catch(e){}openFeed(true)})
+ .catch(function(){$("er").hidden=false;$("er").textContent=L[cur].neterr;$("go").disabled=false})};
+if(pid())openFeed(false);
+</script>
+</body>
+</html>

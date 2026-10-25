@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Lapis Road Admin</title>
+<style>
+:root{--bg:#f3f6f8;--fg:#14202b;--mut:#4d5c69;--line:#c9d3db;--panel:#e6edf2;--acc:#c77a0e;--accbg:#f0a23a;--accfg:#14202b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1820;--fg:#e8eef3;--mut:#9fb0be;--line:#2a3b49;--panel:#16232e;--acc:#f0a23a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Arial,sans-serif}
+.w{max-width:680px;margin:0 auto;padding:16px 18px 60px}
+h1{font-size:26px;margin:10px 0 14px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+nav button,.b{font:700 15px Arial;background:transparent;color:var(--fg);border:2px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer}
+nav button[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.b.p{background:var(--accbg);color:var(--accfg);border:0}
+.b.r{border-color:#c0392b;color:#c0392b}
+input,select,textarea{width:100%;font:16px Arial;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);margin:6px 0 10px}
+textarea{min-height:110px}
+.card{background:var(--panel);border-radius:12px;padding:14px;margin:10px 0}
+.m{color:var(--mut);font-size:14px}
+.tag{display:inline-block;background:var(--bg);border-radius:999px;padding:3px 10px;margin:4px 6px 0 0;font-size:14px}
+h2{font-size:18px;margin:22px 0 4px}
+[hidden]{display:none!important}
+.e{color:#c0392b;font-weight:700}
+</style>
+</head>
+<body><div class="w">
+<h1>Lapis Road · Админ</h1>
+<div id="login"><label>Сыр сөз (ADMIN_KEY)</label><input id="k" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"><button class="b p" id="lg">Кирүү</button><p class="e" id="le" hidden></p></div>
+<div id="app" hidden>
+<nav id="tabs"><button data-t="posts" aria-pressed="true">Билдирүүлөр</button><button data-t="partners" aria-pressed="false" id="tp">Өнөктөштөр</button><button data-t="tour" aria-pressed="false">Туристтер</button><button class="b" id="rf">↻</button></nav>
+<section id="posts">
+<div class="card"><b>Жаңы билдирүү</b>
+<textarea id="tx" placeholder="Жазыңыз: кабарлоо, суроо, пикир сурап..."></textarea>
+<select id="rg"></select>
+<button class="b p" id="send">Жөнөтүү</button> <span id="sm" class="m"></span></div>
+<div id="plist"></div>
+</section>
+<section id="partners" hidden><div id="pl"></div></section>
+<section id="tour" hidden><h2>Саякат пландары</h2><div id="tl"></div><h2>Катталган туристтер</h2><div id="ul"></div></section>
+</div></div>
+<script>
+var API="https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev",key="",R=["Dushanbe","Hissar","Sughd and Penjikent","Fann Mountains","Khorog and Pamir","Wakhan"];
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]})}
+function call(p,m,b){return fetch(API+p,{method:m||"GET",headers:{"x-admin-key":key,"content-type":"application/json"},body:b?JSON.stringify(b):undefined}).then(function(r){if(!r.ok)throw r.status;return r.json()})}
+function dt(t){return new Date(t).toLocaleString()}
+$("rg").innerHTML='<option value="">Бардык өнөктөштөргө</option>'+R.map(function(x){return'<option>'+x+'</option>'}).join("");
+function show(t){["posts","partners","tour"].forEach(function(s){$(s).hidden=s!==t});document.querySelectorAll("#tabs button[data-t]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t===t?"true":"false")})}
+document.querySelectorAll("#tabs button[data-t]").forEach(function(b){b.onclick=function(){show(b.dataset.t)}});
+function render(d){
+ $("plist").innerHTML=d.posts.map(function(m){var g={};m.reacts.forEach(function(r){(g[r.emoji]=g[r.emoji]||[]).push(r.name)});
+  return'<div class="card"><div>'+esc(m.text)+'</div><div class="m">'+esc(m.region||"Баарына")+' · '+dt(m.t)+'</div>'+
+  Object.keys(g).map(function(e){return'<span class="tag" title="'+esc(g[e].join(", "))+'">'+e+' '+g[e].length+': '+esc(g[e].join(", "))+'</span>'}).join("")+
+  '<div><button class="b r" data-del="'+m.id+'">Өчүрүү</button></div></div>'}).join("")||'<p class="m">Билдирүү жок.</p>';
+ var pend=d.partners.filter(function(x){return x.status==="pending"}).length;$("tp").textContent="Өнөктөштөр"+(pend?" ("+pend+")":"");
+ $("pl").innerHTML=d.partners.map(function(x){return'<div class="card"><b>'+esc(x.name)+'</b> · '+esc(x.type)+'<div class="m">'+esc(x.region)+', '+esc(x.place)+' · '+esc(x.price)+'</div><div>'+esc(x.owner)+' · WhatsApp '+esc(x.wa)+(x.tg?' · @'+esc(x.tg):'')+'</div><div class="m">'+esc(x.about)+'</div><div class="m">Абалы: '+esc(x.status)+' · '+dt(x.t)+'</div>'+
+  (x.status==="approved"?'':'<button class="b p" data-ok="'+x.id+'">Бекитүү</button> ')+(x.status==="rejected"?'':'<button class="b r" data-no="'+x.id+'">Четке кагуу</button>')+'</div>'}).join("")||'<p class="m">Өнөктөш жок.</p>';
+ $("tl").innerHTML=d.trips.map(function(x){return'<div class="card"><b>'+esc(x.name)+'</b>, '+esc(x.country)+'<div>'+esc(x.contact)+'</div><div class="m">Кирген тарабы: '+esc(x.entry)+' · Келүү: '+esc(x.date)+' · '+esc(x.people)+' адам</div><div>Жерлер: '+esc((x.places||[]).join(", "))+'</div></div>'}).join("")||'<p class="m">Азырынча жок.</p>';
+ $("ul").innerHTML=d.users.map(function(x){return'<div class="card"><b>'+esc(x.name)+'</b>, '+esc(x.country)+'<div>'+esc(x.phone)+'</div><div class="m">'+dt(x.t)+'</div></div>'}).join("")||'<p class="m">Азырынча жок.</p>';
+}
+function load(){return call("/admin/data").then(render)}
+function bad(m){$("le").hidden=false;$("le").textContent=m}
+$("lg").onclick=function(){key=$("k").value.trim();$("le").hidden=true;
+ if(API.indexOf("http")!==0){bad("Файлдагы https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev Worker дарегине алмаштырыла элек.");return}
+ load().then(function(){$("login").hidden=true;$("app").hidden=false}).catch(function(c){key="";
+  bad(c===403?"Сыр сөз ADMIN_KEY менен дал келген жок.":c===500?"Сервер катасы: Worker'де KV байлоо (DB) жок болушу мүмкүн.":typeof c==="number"?"Ката: "+c+". Worker коду жаңыланганын текшериңиз.":"Серверге туташкан жок: Worker дарегин текшериңиз.")})};
+$("rf").onclick=load;
+$("send").onclick=function(){var t=$("tx").value.trim();if(!t)return;$("sm").textContent="...";
+ call("/admin/post","POST",{text:t,region:$("rg").value}).then(function(){$("tx").value="";$("sm").textContent="Жөнөтүлдү";return load()}).catch(function(){$("sm").textContent="Ката"})};
+document.addEventListener("click",function(e){var t=e.target,id=t.dataset&&(t.dataset.del||t.dataset.ok||t.dataset.no);if(!id)return;
+ if(t.dataset.del){if(!confirm("Өчүрөбүзбү?"))return;call("/admin/delete","POST",{id:id}).then(load)}
+ else call("/decide","POST",{id:id,key:key,ok:!!t.dataset.ok}).then(load)});
+</script>
+</body>
+</html>
