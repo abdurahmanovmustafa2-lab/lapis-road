@@ -51,6 +51,8 @@ textarea{min-height:90px}
 <label for="fw" data-k="fw"></label><input id="fw" inputmode="tel">
 <label for="fg" data-k="fg"></label><input id="fg">
 <label for="fa" data-k="fa"></label><textarea id="fa"></textarea>
+<button class="btn" id="loc" type="button" data-k="loc" style="background:transparent;color:var(--fg);border:2px solid var(--fg)"></button>
+<p class="note" id="locm" hidden></p>
 <button class="btn" id="go" type="button" data-k="send"></button>
 <p class="err" id="er" hidden></p>
 </div>
@@ -68,10 +70,10 @@ var R=["Dushanbe","Hissar","Sughd and Penjikent","Fann Mountains","Khorog and Pa
 var L={
 en:{h1:"Join our host team.",sub:"We bring travelers to Tajikistan’s ancient and historic places. Run a hotel, guesthouse, homestay or dacha, or work as a guide? Work with us.",
 fo:"Your name",fp:"Name of your place or business",ft:"Type",o1:"Hotel",o2:"Guesthouse or homestay",o3:"Dacha",o4:"Guide",fr:"Region",fl:"Town or village",fc:"Price (for example $30 per night)",fw:"WhatsApp number",fg:"Telegram username (optional)",fa:"About you in a few words",send:"Register",
-err:"Please fill in your name, place, price and WhatsApp number.",neterr:"Could not send. Please try again.",h2:"Messages from Lapis Road",thanks:"Thank you! We will review your request. You can already read our messages here.",refresh:"Refresh",empty:"No messages yet."},
+err:"Please fill in your name, place, price and WhatsApp number.",neterr:"Could not send. Please try again.",h2:"Messages from Lapis Road",thanks:"Thank you! We will review your request. You can already read our messages here.",refresh:"Refresh",empty:"No messages yet.",loc:"📍 Add my location on the map",locok:"Location added.",locerr:"Could not get your location. You can skip this."},
 ru:{h1:"Присоединяйтесь к нашей команде.",sub:"Мы возим путешественников по древним и историческим местам Таджикистана. У вас отель, гостевой дом, хоумстей, дача, или вы гид? Работайте с нами.",
 fo:"Ваше имя",fp:"Название места или бизнеса",ft:"Тип",o1:"Отель",o2:"Гостевой дом или хоумстей",o3:"Дача",o4:"Гид",fr:"Регион",fl:"Город или село",fc:"Цена (например $30 за ночь)",fw:"Номер WhatsApp",fg:"Имя в Telegram (по желанию)",fa:"Коротко о вас",send:"Зарегистрироваться",
-err:"Укажите имя, название, цену и номер WhatsApp.",neterr:"Не удалось отправить. Попробуйте ещё раз.",h2:"Сообщения от Lapis Road",thanks:"Спасибо! Мы рассмотрим вашу заявку. Сообщения от нас можно читать уже сейчас.",refresh:"Обновить",empty:"Сообщений пока нет."}};
+err:"Укажите имя, название, цену и номер WhatsApp.",neterr:"Не удалось отправить. Попробуйте ещё раз.",h2:"Сообщения от Lapis Road",thanks:"Спасибо! Мы рассмотрим вашу заявку. Сообщения от нас можно читать уже сейчас.",refresh:"Обновить",empty:"Сообщений пока нет.",loc:"📍 Добавить моё место на карте",locok:"Место добавлено.",locerr:"Не удалось определить место. Можно пропустить."}};
 var $=function(i){return document.getElementById(i)},cur="ru";
 function setL(l){cur=l;document.documentElement.lang=l;document.querySelectorAll("[data-k]").forEach(function(e){e.textContent=L[l][e.dataset.k]});
  document.querySelectorAll(".lg button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.l===l?"true":"false")});try{localStorage.setItem("lang",l)}catch(e){}}
@@ -95,9 +97,13 @@ $("rf").onclick=load;
 $("go").onclick=function(){var v=function(i){return $(i).value.trim()};
  if(!v("fo")||!v("fp")||!v("fc")||!v("fw")){$("er").hidden=false;$("er").textContent=L[cur].err;return}
  $("go").disabled=true;$("er").hidden=true;
- fetch(API+"/partner",{method:"POST",body:JSON.stringify({type:v("ft"),name:v("fp"),owner:v("fo"),region:v("fr"),place:v("fl"),price:v("fc"),wa:v("fw"),tg:v("fg"),about:v("fa")})})
+ fetch(API+"/partner",{method:"POST",body:JSON.stringify({type:v("ft"),name:v("fp"),owner:v("fo"),region:v("fr"),place:v("fl"),price:v("fc"),wa:v("fw"),tg:v("fg"),about:v("fa"),lat:LL?LL[0]:0,lng:LL?LL[1]:0})})
  .then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{localStorage.setItem("lr_pid",d.id)}catch(e){}openFeed(true)})
  .catch(function(){$("er").hidden=false;$("er").textContent=L[cur].neterr;$("go").disabled=false})};
+var LL=null;
+$("loc").onclick=function(){var m=$("locm");function say(k){m.hidden=false;m.textContent=L[cur][k]}
+ if(!navigator.geolocation){say("locerr");return}
+ navigator.geolocation.getCurrentPosition(function(p){LL=[p.coords.latitude,p.coords.longitude];say("locok")},function(){say("locerr")})};
 if(pid())openFeed(false);
 </script>
 </body>

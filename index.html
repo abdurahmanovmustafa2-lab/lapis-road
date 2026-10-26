@@ -64,7 +64,11 @@ footer{padding:28px 0 40px;color:var(--mut);font-size:14px;border-top:1px solid 
 .gerr{color:#c0392b;font-weight:700}
 body.locked #site{display:none}
 body:not(.locked) #gate{display:none}
+#mapbox{height:440px;border-radius:14px;margin-top:14px;border:1px solid var(--line)}
+.leg{color:var(--mut);font-size:14px;margin:10px 0 0}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 </head>
 <body class="locked">
 <div id="gate"><div class="g">
@@ -106,6 +110,8 @@ body:not(.locked) #gate{display:none}
 <div class="row"><h3>Khujand and Istaravshan</h3><span class="meta">Old Silk Road towns</span><p>Two of the oldest towns in Central Asia, with a fortress, bazaars and old mosques.</p></div>
 <div class="row"><h3>Wakhan forts</h3><span class="meta">Pamir</span><p>Ruined forts like Yamchun and Kaakhka above the Panj river, on the old Silk Road.</p></div>
 </div></section>
+
+<section id="map"><div class="wrap"><h2>Map</h2><p class="lead">Ancient places and places to stay. Tap a pin for details.</p><div id="mapbox"></div><p class="leg">Amber: ancient places. Blue: stays and guides. Lines: approximate routes.</p></div></section>
 
 <section id="tours"><div class="wrap">
 <h2>Trips</h2>
@@ -191,6 +197,9 @@ var D={
 "© 2026 Lapis Road. Based in Tajikistan.":["© 2026 Lapis Road. Работаем в Таджикистане.","© 2026 Lapis Road，总部位于塔吉克斯坦。"]
 };
 var N={
+"Map":{ru:"Карта",ky:"Карта"},
+"Ancient places and places to stay. Tap a pin for details.":{ru:"Древние места и места для проживания. Нажмите на метку, чтобы узнать больше.",ky:"Байыркы жерлер жана конок үйлөр. Кененирээк маалымат үчүн белгини басыңыз."},
+"Amber: ancient places. Blue: stays and guides. Lines: approximate routes.":{ru:"Оранжевые: древние места. Синие: проживание и гиды. Линии: примерные маршруты.",ky:"Саргыч: байыркы жерлер. Көк: конок үйлөр жана гиддер. Сызыктар: болжолдуу маршруттар."},
 "Country":{ru:"Страна",ky:"Өлкө"},
 "We use your contact only to confirm your trip. Passport details are asked later, privately, after you book.":{ru:"Контакт нужен только для подтверждения поездки. Данные паспорта мы запросим позже, лично, после бронирования.",ky:"Байланыш сапарды ырастоо үчүн гана керек. Паспорт маалыматын брондоодон кийин, жеке түрдө сурайбыз."},
 "Welcome to Lapis Road":{ru:"Добро пожаловать в Lapis Road",ky:"Lapis Roadго кош келиңиз"},
@@ -308,6 +317,24 @@ $("go").onclick=function(){var n=$("rn").value.trim(),t=$("rt").value.trim(),k=$
   return fetch(API+"/register",{method:"POST",body:JSON.stringify({name:n,phone:t,country:k})}).then(function(r){if(!r.ok)throw 0;return r.json()})
  }).then(function(){try{localStorage.setItem("lr_reg","1")}catch(e){}enter()})
  .catch(function(){err("Could not send. Please try again.");$("go").disabled=false})};
+})();
+</script>
+<script>
+(function(){var API="https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev",el=document.getElementById("mapbox"),done=0;
+var S=[["Dushanbe","City",38.5598,68.787],["Hissar Fortress","Ancient place",38.5283,68.5562],["Sarazm","Ancient place",39.495,67.448],["Penjikent","Ancient place",39.495,67.609],["Khujand","Ancient place",40.2826,69.6222],["Istaravshan","Ancient place",39.9143,69.0029],["Khorog","City",37.4897,71.5531],["Yamchun fort area (approx.)","Ancient place",37.07,72.58]];
+var R=[[[38.5598,68.787],[39.394,68.548],[39.495,67.609],[39.495,67.448]],[[38.5598,68.787],[37.9114,69.7845],[38.456,70.815],[37.4897,71.5531],[36.7286,71.6119],[37.07,72.58]],[[38.5598,68.787],[38.5283,68.5562]],[[40.2826,69.6222],[39.9143,69.0029]]];
+function pop(n,t,ll,x){var d=document.createElement("div"),b=document.createElement("b"),s=document.createElement("div"),a=document.createElement("a");
+ b.textContent=n;s.textContent=t+(x?" · "+x:"");a.href="https://yandex.com/maps/?pt="+ll[1]+","+ll[0]+"&z=12&l=map";a.target="_blank";a.rel="noopener";a.textContent="Yandex Maps";
+ d.appendChild(b);d.appendChild(s);d.appendChild(a);return d}
+function init(){if(done||!window.L)return;done=1;
+ var m=L.map(el,{scrollWheelZoom:false}).setView([38.8,70.8],6);
+ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"&copy; OpenStreetMap"}).addTo(m);
+ R.forEach(function(r){L.polyline(r,{color:"#2b5ba8",weight:3,dashArray:"6 6"}).addTo(m)});
+ S.forEach(function(p){var ll=[p[2],p[3]];L.circleMarker(ll,{radius:9,color:"#14202b",weight:2,fillColor:"#f0a23a",fillOpacity:1}).addTo(m).bindPopup(pop(p[0],p[1],ll))});
+ if(API.indexOf("http")===0)fetch(API+"/partners").then(function(r){return r.json()}).then(function(l){
+  l.forEach(function(x){if(!x.lat||!x.lng)return;var ll=[x.lat,x.lng];
+   L.circleMarker(ll,{radius:9,color:"#14202b",weight:2,fillColor:"#2b5ba8",fillOpacity:1}).addTo(m).bindPopup(pop(x.name,x.type,ll,x.price))})}).catch(function(){});}
+if("IntersectionObserver" in window)new IntersectionObserver(function(e){if(e[0].isIntersecting)init()}).observe(el);else init();
 })();
 </script>
 </body>
