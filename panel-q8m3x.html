@@ -32,7 +32,7 @@ h2{font-size:18px;margin:22px 0 4px}
 <h1>Lapis Road · Админ</h1>
 <div id="login"><label>Сыр сөз (ADMIN_KEY)</label><input id="k" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"><button class="b p" id="lg">Кирүү</button><p class="e" id="le" hidden></p></div>
 <div id="app" hidden>
-<nav id="tabs"><button data-t="posts" aria-pressed="true">Билдирүүлөр</button><button data-t="partners" aria-pressed="false" id="tp">Өнөктөштөр</button><button data-t="tour" aria-pressed="false">Туристтер</button><button class="b" id="rf">↻</button></nav>
+<nav id="tabs"><button data-t="posts" aria-pressed="true">Билдирүүлөр</button><button data-t="partners" aria-pressed="false" id="tp">Өнөктөштөр</button><button data-t="tour" aria-pressed="false">Туристтер</button><button data-t="edit" aria-pressed="false">Өзгөртүү</button><button class="b" id="rf">↻</button></nav>
 <section id="posts">
 <div class="card"><b>Жаңы билдирүү</b>
 <textarea id="tx" placeholder="Жазыңыз: кабарлоо, суроо, пикир сурап..."></textarea>
@@ -41,6 +41,7 @@ h2{font-size:18px;margin:22px 0 4px}
 <div id="plist"></div>
 </section>
 <section id="partners" hidden><div id="pl"></div></section>
+<section id="edit" hidden><div id="el"></div></section>
 <section id="tour" hidden><h2>Саякат пландары</h2><div id="tl"></div><h2>Катталган туристтер</h2><div id="ul"></div></section>
 </div></div>
 <script>
@@ -50,7 +51,7 @@ function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(m){return
 function call(p,m,b){return fetch(API+p,{method:m||"GET",headers:{"x-admin-key":key,"content-type":"application/json"},body:b?JSON.stringify(b):undefined}).then(function(r){if(!r.ok)throw r.status;return r.json()})}
 function dt(t){return new Date(t).toLocaleString()}
 $("rg").innerHTML='<option value="">Бардык өнөктөштөргө</option>'+R.map(function(x){return'<option>'+x+'</option>'}).join("");
-function show(t){["posts","partners","tour"].forEach(function(s){$(s).hidden=s!==t});document.querySelectorAll("#tabs button[data-t]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t===t?"true":"false")})}
+function show(t){["posts","partners","tour","edit"].forEach(function(s){$(s).hidden=s!==t});document.querySelectorAll("#tabs button[data-t]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t===t?"true":"false")})}
 document.querySelectorAll("#tabs button[data-t]").forEach(function(b){b.onclick=function(){show(b.dataset.t)}});
 function render(d){
  $("plist").innerHTML=d.posts.map(function(m){var g={};m.reacts.forEach(function(r){(g[r.emoji]=g[r.emoji]||[]).push(r.name)});
@@ -75,6 +76,42 @@ $("send").onclick=function(){var t=$("tx").value.trim();if(!t)return;$("sm").tex
 document.addEventListener("click",function(e){var t=e.target,id=t.dataset&&(t.dataset.del||t.dataset.ok||t.dataset.no);if(!id)return;
  if(t.dataset.del){if(!confirm("Өчүрөбүзбү?"))return;call("/admin/delete","POST",{id:id}).then(load)}
  else call("/decide","POST",{id:id,key:key,ok:!!t.dataset.ok}).then(load)});
+
+/* ===== ӨЗГӨРТҮҮ: жерлер, тарых, сүрөт жана видео ===== */
+var CUR=null,LG=[["en","English"],["ru","Русский"],["ky","Кыргызча"]],MAXV=24*1024*1024;
+function pn(o){o=o||{};return o.ky||o.en||o.ru||"?"}
+function pget(p){return fetch(API+p).then(function(r){if(!r.ok)throw r.status;return r.json()})}
+function plist(){CUR=null;$("el").innerHTML='<p class="m">...</p>';return pget("/places").then(function(a){
+ $("el").innerHTML='<button class="b p" id="addp">+ Жаңы жер кошуу</button>'+a.map(function(x){return'<div class="card"><b>'+esc(pn(x.n))+'</b>'+(x.custom?'':' <span class="tag">негизги</span>')+'<div class="m">'+esc(pn(x.s))+'</div><button class="b" data-edit="'+x.id+'">Ачуу жана өзгөртүү</button></div>'}).join("")}).catch(function(){$("el").innerHTML='<p class="e">Жүктөлгөн жок. Worker жаңыланганын текшериңиз.</p>'})}
+function editor(id){var go=function(P){CUR=P;form()};
+ if(id)pget("/place?id="+encodeURIComponent(id)).then(go).catch(function(){alert("Ката")});else go({id:"",n:{},s:{},h:{},media:[]})}
+function form(){var P=CUR,h='<button class="b" id="eb">← Тизме</button><div class="card"><b>'+(P.id?"Жерди өзгөртүү":"Жаңы жер")+'</b><p class="m">Бир тилде жазсаңыз да болот: башка тилдерде ошол көрүнөт. Туристтер көбүнчө англисчени окушат.</p>';
+ LG.forEach(function(l){var k=l[0];h+='<h2>'+l[1]+'</h2><label class="m">Аталышы</label><input data-f="n" data-l="'+k+'" maxlength="80" value="'+esc(P.n[k])+'"><label class="m">Кыска сүрөттөмө (тизмеде көрүнөт)</label><input data-f="s" data-l="'+k+'" maxlength="200" value="'+esc(P.s[k])+'"><label class="m">Тарыхы жана маалымат (абзацтарды бош сап менен бөлүңүз)</label><textarea data-f="h" data-l="'+k+'" style="min-height:170px">'+esc(P.h[k])+'</textarea>'});
+ h+='<button class="b p" id="sv">Сактоо</button> <span class="m" id="svm"></span>'+(P.id&&P.custom?' <button class="b r" id="pdel">Жерди өчүрүү</button>':'')+'</div><div id="em"></div>';
+ $("el").innerHTML=h;media()}
+function media(){var P=CUR,b=$("em");if(!b)return;
+ if(!P.id){b.innerHTML='<div class="card m">Адегенде жерди сактаңыз, андан кийин сүрөт жана видео жүктөй аласыз.</div>';return}
+ b.innerHTML='<div class="card"><b>Сүрөт жана видео</b><p class="m">Сүрөттөр өзү кичирейтилет. Видео 24 МБ чейин (болжол менен 30-60 секунд).</p><input type="file" id="fl" accept="image/*,video/*" multiple><button class="b p" id="up">Жүктөө</button> <span class="m" id="upm"></span></div><div id="ml"></div>';
+ mlist()}
+function mlist(){pget("/place?id="+encodeURIComponent(CUR.id)).then(function(P){CUR.media=P.media;
+ $("ml").innerHTML=P.media.map(function(m){var src=API+"/media?id="+m.id;return'<div class="card">'+(m.t==="video"?'<video src="'+src+'" controls playsinline preload="metadata" style="width:100%;border-radius:8px"></video>':'<img src="'+src+'" alt="" style="width:100%;border-radius:8px" loading="lazy">')+'<div class="m">❤️ '+(m.likes||0)+' · 💬 '+(m.cm||0)+'</div><button class="b" data-cm="'+m.id+'">Комментарийлер</button> <button class="b r" data-md="'+m.id+'">Өчүрүү</button><div id="c-'+m.id+'"></div></div>'}).join("")||'<p class="m">Азырынча жок.</p>'})}
+function shrink(f){return new Promise(function(ok,no){var im=new Image(),u=URL.createObjectURL(f);im.onload=function(){var k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){b?ok(b):no()},"image/jpeg",.82)};im.onerror=no;im.src=u})}
+function upload(){var fs=[].slice.call($("fl").files),m=$("upm"),i=0,bad=0;if(!fs.length){m.textContent="Файл тандаңыз";return}
+ $("up").disabled=true;
+ (function next(){if(i>=fs.length){$("up").disabled=false;$("fl").value="";m.textContent="Даяр"+(bad?" · өткөрүлгөн: "+bad:"");mlist();return}
+  var f=fs[i++];m.textContent=i+"/"+fs.length+" жүктөлүп жатат...";
+  var pr=f.type.indexOf("video/")===0?(f.size>MAXV?Promise.reject():Promise.resolve(f)):f.type.indexOf("image/")===0?shrink(f):Promise.reject();
+  pr.then(function(b){return fetch(API+"/admin/media?pid="+encodeURIComponent(CUR.id),{method:"POST",headers:{"x-admin-key":key,"content-type":b.type||f.type},body:b})}).then(function(r){if(!r.ok)bad++;next()}).catch(function(){bad++;next()})})()}
+function save(){var P={id:CUR.id,n:{},s:{},h:{}};document.querySelectorAll("#el [data-f]").forEach(function(x){P[x.dataset.f][x.dataset.l]=x.value.trim()});
+ if(!P.n.en&&!P.n.ru&&!P.n.ky){$("svm").textContent="Аталышын жазыңыз";return}
+ $("svm").textContent="...";call("/admin/place","POST",P).then(function(r){CUR.id=r.id;CUR.custom=CUR.custom!==false;$("svm").textContent="Сакталды";media()}).catch(function(){$("svm").textContent="Ката"})}
+document.addEventListener("click",function(e){var t=e.target,d=t.dataset||{};
+ if(t.id==="addp")editor("");else if(d.edit)editor(d.edit);else if(t.id==="eb")plist();else if(t.id==="sv")save();else if(t.id==="up")upload();
+ else if(t.id==="pdel"){if(confirm("Бул жерди сүрөттөрү жана комментарийлери менен бирге өчүрөбүзбү?"))call("/admin/placedel","POST",{id:CUR.id}).then(plist)}
+ else if(d.md){if(confirm("Өчүрөбүзбү?"))call("/admin/mediadel","POST",{pid:CUR.id,id:d.md}).then(mlist)}
+ else if(d.cm){var box=$("c-"+d.cm);pget("/mx?id="+d.cm+"&d=admin-view").then(function(x){box.innerHTML=x.comments.map(function(k){return'<div class="m"><b>'+esc(k.n)+'</b>: '+esc(k.x)+' <button class="b r" data-cd="'+k.id+'" data-m="'+d.cm+'">×</button></div>'}).join("")||'<p class="m">Комментарий жок.</p>'})}
+ else if(d.cd){call("/admin/cdel","POST",{pid:CUR.id,id:d.m,cid:d.cd}).then(function(){var b=document.querySelector('[data-cm="'+d.m+'"]');if(b)b.click()})}});
+var _sh=show;show=function(t){_sh(t);if(t==="edit"&&!CUR)plist()};
 </script>
 </body>
 </html>

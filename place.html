@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lapis Road</title>
+<meta name="theme-color" content="#0b1b3a">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#fbf8ef;--fg:#0f2347;--mut:#58627a;--line:#e6ddc6;--panel:#f4edda;--acc:#8f6a1c;--gold:#d4af62;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.7 Jost,system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0}
+.top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 0}
+.top a,.top select{font:500 14px Jost,sans-serif;color:#fff;text-decoration:none;background:rgba(11,27,58,.45);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:8px 14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.top option{color:#14202b}
+.hero{position:relative;min-height:56svh;display:flex;flex-direction:column;justify-content:flex-end;background:#0b1b3a center/cover no-repeat;color:#fff;padding:0 22px 40px;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(rgba(8,18,40,.5),rgba(8,18,40,.2) 40%,rgba(8,18,40,.85))}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:60px;background:linear-gradient(transparent,var(--bg));z-index:-1}
+.brand{font:500 12px Jost,sans-serif;letter-spacing:.36em;text-transform:uppercase;color:#e8cf94;margin:0 0 12px}
+h1{font-size:clamp(40px,12vw,76px);line-height:.98;text-shadow:0 2px 30px rgba(0,0,0,.4)}
+.sm{margin:12px 0 0;font-size:19px;color:rgba(255,255,255,.9);max-width:30em}
+.w{max-width:720px;margin:0 auto;padding:0 20px}
+.story{padding:44px 0 12px}
+.story p{margin:0 0 18px;font-size:18px}
+h2{font-size:clamp(30px,8vw,40px);margin:34px 0 18px}
+h2::before{content:"";display:block;width:48px;height:2px;background:linear-gradient(90deg,#c9a45c,transparent);margin:0 0 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;margin:0 0 22px;overflow:hidden;box-shadow:0 18px 40px -26px rgba(15,35,71,.45)}
+.card img,.card video{display:block;width:100%;max-height:78svh;object-fit:contain;background:#0b1b3a}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 12px}
+.bar button,.bar a{font:500 15px Jost,sans-serif;background:var(--panel);color:var(--fg);border:1px solid transparent;border-radius:999px;padding:7px 13px;cursor:pointer;text-decoration:none;line-height:1.2}
+.bar button[aria-pressed=true]{background:#fff;border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,98,.35)}
+.bar .lk[aria-pressed=true]{color:#c0392b}
+.bar .sp{flex:1}
+.cm{display:none;border-top:1px solid var(--line);padding:12px 14px 14px;background:#fdfbf4}
+.cm.open{display:block}
+.c1{margin:0 0 10px;font-size:15.5px;line-height:1.45}.c1 b{font-weight:600}.c1 small{color:var(--mut);margin-left:6px}
+.fm{display:grid;gap:8px;margin-top:8px}
+.fm input{font:16px Jost,sans-serif;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--fg);width:100%}
+.fm button{font:600 14px Jost,sans-serif;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg,#ecd49a,#c9a45c);color:#0b1b3a;border:0;border-radius:999px;padding:12px 18px;cursor:pointer}
+.m{color:var(--mut)}
+footer{background:#0b1b3a;color:#aeb9d1;text-align:center;padding:36px 20px calc(44px + env(safe-area-inset-bottom,0px));margin-top:40px;font-size:14px}
+footer a{color:#e8cf94}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="top"><a id="bk" href="./">&larr; Lapis Road</a><select id="ls" aria-label="Language"><option value="en">English</option><option value="ru">Русский</option><option value="ky">Кыргызча</option></select></div>
+<header class="hero" id="hero"><div class="brand">Lapis Road</div><h1 id="t">&nbsp;</h1><p class="sm" id="sm"></p></header>
+<main class="w">
+<div class="story" id="story"></div>
+<h2 id="gh" hidden></h2>
+<div id="feed"></div>
+</main>
+<footer><a href="./">Lapis Road</a></footer>
+<script>
+var API="https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev",$=function(i){return document.getElementById(i)};
+var U={en:{back:"Lapis Road",gal:"Photos and videos",none:"Photos and videos will appear here soon.",cm:"Comments",name:"Your name",wr:"Write a comment...",send:"Send",dl:"Download",nf:"This page was not found.",err:"Could not load. Please try again.",nocm:"No comments yet. Be the first."},
+ru:{back:"Lapis Road",gal:"Фото и видео",none:"Скоро здесь появятся фото и видео.",cm:"Комментарии",name:"Ваше имя",wr:"Напишите комментарий...",send:"Отправить",dl:"Скачать",nf:"Страница не найдена.",err:"Не удалось загрузить. Попробуйте ещё раз.",nocm:"Комментариев пока нет. Будьте первым."},
+ky:{back:"Lapis Road",gal:"Сүрөттөр жана видеолор",none:"Сүрөттөр жана видеолор жакында чыгат.",cm:"Комментарийлер",name:"Атыңыз",wr:"Комментарий жазыңыз...",send:"Жөнөтүү",dl:"Жүктөп алуу",nf:"Бул барак табылган жок.",err:"Жүктөлгөн жок. Кайра аракет кылыңыз.",nocm:"Азырынча комментарий жок. Биринчи болуңуз."}};
+var L="en";try{L=localStorage.getItem("lang")||(navigator.language||"en").slice(0,2)}catch(e){}if(!U[L])L="en";
+var did="";try{did=localStorage.getItem("lr_did");if(!did){did="d"+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem("lr_did",did)}}catch(e){did="d"+Math.random().toString(36).slice(2)+Date.now().toString(36)}
+var id=new URLSearchParams(location.search).get("id")||"",P=null,ST=["😍","🔥","👏","😮","🙏"];
+function t(k){return U[L][k]||U.en[k]}
+function pk(o){o=o||{};return o[L]||o.en||o.ru||o.ky||""}
+function nm(){try{return localStorage.getItem("lr_name")||""}catch(e){return""}}
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+function api(p,b){return fetch(API+p,b?{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(b)}:undefined).then(function(r){if(!r.ok)throw r.status;return r.json()})}
+function head(){document.documentElement.lang=L;$("ls").value=L;$("bk").textContent="← "+t("back");$("t").textContent=pk(P.n);$("sm").textContent=pk(P.s);document.title=pk(P.n)+" · Lapis Road";
+ $("story").innerHTML="";pk(P.h).split(/\n\s*\n/).forEach(function(x){if(x.trim())$("story").appendChild(el("p","",x.trim()))});
+ var c=P.media.filter(function(m){return m.t==="image"})[0];if(c)$("hero").style.backgroundImage="url("+API+"/media?id="+c.id+")";
+ $("gh").hidden=false;$("gh").textContent=t("gal")}
+function paint(card,m,x){
+ var b=card.querySelector(".bar");b.innerHTML="";
+ var lk=el("button","lk","");lk.setAttribute("aria-pressed",x.liked);lk.textContent=(x.liked?"❤️ ":"🤍 ")+x.likes;lk.setAttribute("aria-label","Like");lk.onclick=function(){api("/mlike",{pid:id,id:m.id,d:did}).then(function(r){paint(card,m,r)})};b.appendChild(lk);
+ ST.forEach(function(e){var s=el("button","",e+(x.st[e]?" "+x.st[e]:""));s.setAttribute("aria-pressed",x.mine===e);s.onclick=function(){api("/mreact",{pid:id,id:m.id,d:did,e:e}).then(function(r){paint(card,m,r)})};b.appendChild(s)});
+ b.appendChild(el("span","sp"));
+ var c=el("button","","💬 "+x.comments.length);c.setAttribute("aria-label",t("cm"));c.onclick=function(){card.querySelector(".cm").classList.toggle("open")};b.appendChild(c);
+ var d=el("a","","⬇");d.href=API+"/media?id="+m.id+"&dl=1";d.setAttribute("download","");d.setAttribute("aria-label",t("dl"));d.title=t("dl");b.appendChild(d);
+ var box=card.querySelector(".cm"),op=box.classList.contains("open"),old=box.querySelector("input");var keep=old?[box.querySelector(".in1").value,box.querySelector(".in2").value]:["",""];
+ box.innerHTML="";
+ if(!x.comments.length)box.appendChild(el("p","m",t("nocm")));
+ x.comments.forEach(function(k){var p=el("div","c1");p.appendChild(el("b","",k.n));p.appendChild(document.createTextNode(" "+k.x));p.appendChild(el("small","",new Date(k.t).toLocaleDateString()));box.appendChild(p)});
+ var f=el("div","fm"),n1=el("input","in1"),n2=el("input","in2");n1.placeholder=t("name");n1.maxLength=40;n1.value=keep[0]||nm();n2.placeholder=t("wr");n2.maxLength=300;n2.value=keep[1];
+ var sb=el("button","",t("send"));sb.type="button";sb.onclick=function(){var a=n1.value.trim(),z=n2.value.trim();if(!a||!z)return;try{localStorage.setItem("lr_name",a)}catch(e){}sb.disabled=true;
+  api("/mcomment",{pid:id,id:m.id,d:did,n:a,x:z}).then(function(r){box.classList.add("open");n2.value="";keep=["",""];paint(card,m,r);card.querySelector(".cm").classList.add("open");card.querySelector(".in2").value=""}).catch(function(){sb.disabled=false})};
+ f.appendChild(n1);f.appendChild(n2);f.appendChild(sb);box.appendChild(f);if(op)box.classList.add("open")}
+function feed(){var F=$("feed");F.innerHTML="";if(!P.media.length){F.appendChild(el("p","m",t("none")));return}
+ P.media.forEach(function(m){var card=el("div","card"),src=API+"/media?id="+m.id,v;
+  if(m.t==="video"){v=el("video");v.controls=true;v.playsInline=true;v.preload="metadata";v.src=src}else{v=el("img");v.loading="lazy";v.alt=pk(P.n);v.src=src}
+  card.appendChild(v);card.appendChild(el("div","bar"));card.appendChild(el("div","cm"));F.appendChild(card);
+  paint(card,m,{likes:m.likes||0,liked:false,st:{},mine:"",comments:[]});
+  api("/mx?id="+m.id+"&d="+encodeURIComponent(did)).catch(function(){return null}).then(function(r){if(r)paint(card,m,r)})})}
+$("ls").onchange=function(){L=$("ls").value;try{localStorage.setItem("lang",L)}catch(e){}head();feed()};
+fetch(API+"/place?id="+encodeURIComponent(id)).then(function(r){if(!r.ok)throw r.status;return r.json()}).then(function(p){P=p;head();feed()}).catch(function(c){$("t").textContent=c===404?t("nf"):t("err")});
+</script>
+</body>
+</html>
