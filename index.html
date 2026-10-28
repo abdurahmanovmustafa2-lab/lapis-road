@@ -76,7 +76,7 @@ body:not(.locked) #gate{display:none}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-</head>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#14316b"><link rel="apple-touch-icon" href="icon-192.png"></head>
 <body class="locked">
 <div id="gate"><div class="g">
 <select id="gl" class="gsel" aria-label="Language"><option value="en">English</option><option value="ru">Русский</option><option value="ky">Кыргызча</option><option value="zh">中文</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="es">Español</option><option value="tr">Türkçe</option><option value="ko">한국어</option><option value="ja">日本語</option><option value="it">Italiano</option></select>
@@ -377,5 +377,5 @@ $("ps").onclick=function(){var m=$("pm");m.className="leg";
 if("IntersectionObserver" in window)new IntersectionObserver(function(e){if(e[0].isIntersecting)init()}).observe(el);else init();
 })();
 </script>
-</body>
+<script>if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});</script></body>
 </html>
