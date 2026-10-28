@@ -65,6 +65,13 @@ footer{padding:28px 0 40px;color:var(--mut);font-size:14px;border-top:1px solid 
 body.locked #site{display:none}
 body:not(.locked) #gate{display:none}
 #mapbox{height:440px;border-radius:14px;margin-top:14px;border:1px solid var(--line)}
+#pl{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+#pl h3{margin:0 0 8px}#pl label{display:block;margin:10px 0 4px;font-size:15px;color:var(--mut)}
+#pl input,#pl select{width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);font:inherit}
+#pl .chip{display:inline-block;background:#2f8f5b;color:#fff;border-radius:999px;padding:4px 12px;margin:0 6px 6px 0;font-size:15px}
+#pl .pk{display:flex;gap:10px;align-items:flex-start;margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:10px}
+#pl .pk input{width:auto;margin-top:5px}#pl .ok{color:#2f8f5b;font-weight:700}#pl .bad{color:#c0392b}
+.pbtn{margin-top:6px;border:0;border-radius:999px;padding:8px 14px;background:#f0a23a;color:#14202b;font-weight:700;cursor:pointer}
 .leg{color:var(--mut);font-size:14px;margin:10px 0 0}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
@@ -111,7 +118,17 @@ body:not(.locked) #gate{display:none}
 <div class="row"><h3>Wakhan forts</h3><span class="meta">Pamir</span><p>Ruined forts like Yamchun and Kaakhka above the Panj river, on the old Silk Road.</p></div>
 </div></section>
 
-<section id="map"><div class="wrap"><h2>Map</h2><p class="lead">Ancient places and places to stay. Tap a pin for details.</p><div id="mapbox"></div><p class="leg">Amber: ancient places. Blue: stays and guides. Lines: approximate routes.</p></div></section>
+<section id="map"><div class="wrap"><h2>Map</h2><p class="lead">Ancient places and places to stay. Tap a pin for details.</p><div id="mapbox"></div><p class="leg">Amber: ancient places. Green: places you chose, with your route as a green line. Blue: stays and guides. Dashed lines: approximate routes.</p><div id="pl"><h3>My trip</h3>
+<p class="leg" id="pe">Tap amber pins on the map, then "Add to my trip".</p><div id="pc"></div>
+<label>Where do you enter Tajikistan?</label>
+<select id="pen"><option>Dushanbe airport</option><option>Khujand airport</option><option>Uzbekistan border (Penjikent / Oybek)</option><option>Kyrgyzstan border</option><option>China border (Kulma)</option><option>Afghanistan border</option></select>
+<label>Arrival date</label><input id="pd" type="date">
+<label>People</label><input id="pp" type="number" min="1" max="30" value="2">
+<label>Name</label><input id="pn" autocomplete="name">
+<label>Country</label><input id="pcn" autocomplete="country-name">
+<label>WhatsApp or phone</label><input id="pct" type="tel" autocomplete="tel">
+<h3 style="margin-top:16px">Stays and guides</h3><div id="pk"><p class="leg">Loading...</p></div>
+<button class="btn" id="ps" type="button">Send my trip</button><p id="pm" class="leg"></p></div></div></section>
 
 <section id="tours"><div class="wrap">
 <h2>Trips</h2>
@@ -199,7 +216,7 @@ var D={
 var N={
 "Map":{ru:"Карта",ky:"Карта"},
 "Ancient places and places to stay. Tap a pin for details.":{ru:"Древние места и места для проживания. Нажмите на метку, чтобы узнать больше.",ky:"Байыркы жерлер жана конок үйлөр. Кененирээк маалымат үчүн белгини басыңыз."},
-"Amber: ancient places. Blue: stays and guides. Lines: approximate routes.":{ru:"Оранжевые: древние места. Синие: проживание и гиды. Линии: примерные маршруты.",ky:"Саргыч: байыркы жерлер. Көк: конок үйлөр жана гиддер. Сызыктар: болжолдуу маршруттар."},
+"Amber: ancient places. Green: places you chose, with your route as a green line. Blue: stays and guides. Dashed lines: approximate routes.":{ru:"Оранжевые: древние места. Синие: проживание и гиды. Линии: примерные маршруты.",ky:"Саргыч: байыркы жерлер. Көк: конок үйлөр жана гиддер. Сызыктар: болжолдуу маршруттар."},
 "Country":{ru:"Страна",ky:"Өлкө"},
 "We use your contact only to confirm your trip. Passport details are asked later, privately, after you book.":{ru:"Контакт нужен только для подтверждения поездки. Данные паспорта мы запросим позже, лично, после бронирования.",ky:"Байланыш сапарды ырастоо үчүн гана керек. Паспорт маалыматын брондоодон кийин, жеке түрдө сурайбыз."},
 "Welcome to Lapis Road":{ru:"Добро пожаловать в Lapis Road",ky:"Lapis Roadго кош келиңиз"},
@@ -323,17 +340,40 @@ $("go").onclick=function(){var n=$("rn").value.trim(),t=$("rt").value.trim(),k=$
 (function(){var API="https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev",el=document.getElementById("mapbox"),done=0;
 var S=[["Dushanbe","City",38.5598,68.787],["Hissar Fortress","Ancient place",38.5283,68.5562],["Sarazm","Ancient place",39.495,67.448],["Penjikent","Ancient place",39.495,67.609],["Khujand","Ancient place",40.2826,69.6222],["Istaravshan","Ancient place",39.9143,69.0029],["Khorog","City",37.4897,71.5531],["Yamchun fort area (approx.)","Ancient place",37.07,72.58]];
 var R=[[[38.5598,68.787],[39.394,68.548],[39.495,67.609],[39.495,67.448]],[[38.5598,68.787],[37.9114,69.7845],[38.456,70.815],[37.4897,71.5531],[36.7286,71.6119],[37.07,72.58]],[[38.5598,68.787],[38.5283,68.5562]],[[40.2826,69.6222],[39.9143,69.0029]]];
-function pop(n,t,ll,x){var d=document.createElement("div"),b=document.createElement("b"),s=document.createElement("div"),a=document.createElement("a");
- b.textContent=n;s.textContent=t+(x?" · "+x:"");a.href="https://yandex.com/maps/?pt="+ll[1]+","+ll[0]+"&z=12&l=map";a.target="_blank";a.rel="noopener";a.textContent="Yandex Maps";
- d.appendChild(b);d.appendChild(s);d.appendChild(a);return d}
+var PL=[],PK=[],$=function(i){return document.getElementById(i)},MK={};
+var MP=null,TL=null,EM=null,EC={"Dushanbe airport":[38.5433,68.825],"Khujand airport":[40.2154,69.6947],"Uzbekistan border (Penjikent / Oybek)":[39.47,67.6]};
+function trip(){if(!MP)return;if(TL){MP.removeLayer(TL);TL=null}if(EM){MP.removeLayer(EM);EM=null}
+ var pts=[],e=EC[$("pen").value];
+ if(e){EM=L.circleMarker(e,{radius:8,color:"#14202b",weight:2,fillColor:"#fff",fillOpacity:1}).addTo(MP).bindTooltip("Entry",{permanent:false});pts.push(e)}
+ PL.forEach(function(n){for(var i=0;i<S.length;i++)if(S[i][0]===n)pts.push([S[i][2],S[i][3]])});
+ if(pts.length>1){TL=L.polyline(pts,{color:"#2f8f5b",weight:4}).addTo(MP);MP.fitBounds(TL.getBounds(),{padding:[30,30]})}else if(pts.length===1)MP.setView(pts[0],9)}
+function draw(){var c=$("pc");c.textContent="";PL.forEach(function(n){var e=document.createElement("span");e.className="chip";e.textContent=n;c.appendChild(e)});$("pe").hidden=PL.length>0;trip()}
+function toggle(n){var i=PL.indexOf(n);if(i>-1)PL.splice(i,1);else PL.push(n);var m=MK[n];if(m)m.setStyle({fillColor:i>-1?"#f0a23a":"#2f8f5b"});draw()}
+function pop(n,t,ll,x,sel){var d=document.createElement("div"),b=document.createElement("b"),s=document.createElement("div"),a=document.createElement("a");
+ b.textContent=n;s.textContent=t+(x?" \u00b7 "+x:"");a.href="https://yandex.com/maps/?pt="+ll[1]+","+ll[0]+"&z=12&l=map";a.target="_blank";a.rel="noopener";a.textContent="Yandex Maps";
+ d.appendChild(b);d.appendChild(s);d.appendChild(a);
+ if(sel){var k=document.createElement("button");k.type="button";k.className="pbtn";k.textContent=PL.indexOf(n)>-1?"Remove":"Add to my trip";k.onclick=function(){toggle(n);k.textContent=PL.indexOf(n)>-1?"Remove":"Add to my trip"};d.appendChild(document.createElement("br"));d.appendChild(k)}
+ return d}
 function init(){if(done||!window.L)return;done=1;
- var m=L.map(el,{scrollWheelZoom:false}).setView([38.8,70.8],6);
+ var m=L.map(el,{scrollWheelZoom:false}).setView([38.8,70.8],6);MP=m;$("pen").onchange=trip;
  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"&copy; OpenStreetMap"}).addTo(m);
  R.forEach(function(r){L.polyline(r,{color:"#2b5ba8",weight:3,dashArray:"6 6"}).addTo(m)});
- S.forEach(function(p){var ll=[p[2],p[3]];L.circleMarker(ll,{radius:9,color:"#14202b",weight:2,fillColor:"#f0a23a",fillOpacity:1}).addTo(m).bindPopup(pop(p[0],p[1],ll))});
+ S.forEach(function(p){var ll=[p[2],p[3]];MK[p[0]]=L.circleMarker(ll,{radius:11,color:"#14202b",weight:2,fillColor:"#f0a23a",fillOpacity:1}).addTo(m).bindPopup(pop(p[0],p[1],ll,null,true))});
  if(API.indexOf("http")===0)fetch(API+"/partners").then(function(r){return r.json()}).then(function(l){
   l.forEach(function(x){if(!x.lat||!x.lng)return;var ll=[x.lat,x.lng];
    L.circleMarker(ll,{radius:9,color:"#14202b",weight:2,fillColor:"#2b5ba8",fillOpacity:1}).addTo(m).bindPopup(pop(x.name,x.type,ll,x.price))})}).catch(function(){});}
+
+function pks(){if(API.indexOf("http")!==0)return;fetch(API+"/partners").then(function(r){return r.json()}).then(function(l){var b=$("pk");b.textContent="";
+ if(!l.length){b.innerHTML='<p class="leg">No stays or guides yet. You can still send your trip and we will arrange them.</p>';return}
+ l.forEach(function(x){var r=document.createElement("label");r.className="pk";var c=document.createElement("input");c.type="checkbox";c.onchange=function(){var i=PK.indexOf(x.id);if(c.checked&&i<0)PK.push(x.id);if(!c.checked&&i>-1)PK.splice(i,1)};
+  var t=document.createElement("span");t.textContent=x.name+" ("+x.type+") \u00b7 "+(x.region||"")+(x.price?" \u00b7 "+x.price:"");r.appendChild(c);r.appendChild(t);b.appendChild(r)})}).catch(function(){$("pk").textContent=""})}
+pks();
+$("ps").onclick=function(){var m=$("pm");m.className="leg";
+ var d={name:$("pn").value.trim(),country:$("pcn").value.trim(),contact:$("pct").value.trim(),entry:$("pen").value,date:$("pd").value,people:$("pp").value,places:PL,picks:PK};
+ if(!d.name||!d.contact||!d.date){m.className="leg bad";m.textContent="Please fill name, phone and arrival date.";return}
+ if(!PL.length){m.className="leg bad";m.textContent="Tap at least one amber pin on the map first.";return}
+ $("ps").disabled=true;
+ fetch(API+"/trip",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)}).then(function(r){if(!r.ok)throw 0;m.className="leg ok";m.textContent="Sent! We will contact you on WhatsApp to confirm."}).catch(function(){m.className="leg bad";m.textContent="Could not send. Please try again or write to us on WhatsApp."}).then(function(){$("ps").disabled=false})};
 if("IntersectionObserver" in window)new IntersectionObserver(function(e){if(e[0].isIntersecting)init()}).observe(el);else init();
 })();
 </script>
