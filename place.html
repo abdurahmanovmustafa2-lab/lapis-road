@@ -10,6 +10,7 @@
 <style>
 :root{--bg:#fbf8ef;--fg:#0f2347;--mut:#58627a;--line:#e6ddc6;--panel:#f4edda;--acc:#8f6a1c;--gold:#d4af62;color-scheme:light}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.7 Jost,system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom,0px)}
 h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0}
@@ -44,22 +45,67 @@ h2::before{content:"";display:block;width:48px;height:2px;background:linear-grad
 footer{background:#0b1b3a;color:#aeb9d1;text-align:center;padding:36px 20px calc(44px + env(safe-area-inset-bottom,0px));margin-top:40px;font-size:14px}
 footer a{color:#e8cf94}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.chips span{font:500 14px Jost,sans-serif;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;padding:6px 14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tabs{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;background:rgba(251,248,239,.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);scrollbar-width:none;justify-content:center}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;font:500 15px Jost,sans-serif;color:var(--mut);background:transparent;border:0;border-bottom:2px solid transparent;padding:8px 14px;cursor:pointer;transition:color .25s,border-color .25s}
+.tabs button[aria-selected=true]{color:var(--fg);border-color:var(--gold);font-weight:600}
+.pn.show{animation:pin .5s ease both}
+@keyframes pin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.xa{display:flex;justify-content:flex-end;margin:8px 0 14px}
+.xa button{font:500 14px Jost,sans-serif;color:var(--acc);background:transparent;border:1px solid var(--gold);border-radius:999px;padding:7px 16px;cursor:pointer}
+.day{background:#fff;border:1px solid var(--line);border-radius:18px;margin:0 0 12px;box-shadow:0 14px 34px -26px rgba(15,35,71,.5);overflow:hidden}
+.dh{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:transparent;border:0;padding:16px;font:inherit;color:var(--fg);cursor:pointer}
+.dn{flex:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#14316b,#0b1b3a);color:#e8cf94;display:grid;place-items:center;font:600 18px "Cormorant Garamond",Georgia,serif;transition:transform .35s}
+.day.open .dn{transform:rotate(360deg)}
+.dt{flex:1;font:600 22px/1.15 "Cormorant Garamond",Georgia,serif}
+.dc{flex:none;color:var(--acc);font-size:18px;transition:transform .35s}
+.day.open .dc{transform:rotate(180deg)}
+.dbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease}
+.day.open .dbody{grid-template-rows:1fr}
+.dbody>div{overflow:hidden}
+.di{padding:0 18px 18px}
+.dm{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.dm span{font:500 14px Jost,sans-serif;background:var(--panel);border-radius:999px;padding:5px 12px}
+.di p{margin:0 0 12px;font-size:16.5px;white-space:pre-line}
+.cg{display:grid;gap:14px}
+.cb{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 14px 34px -26px rgba(15,35,71,.5)}
+.cb h3{font:600 24px "Cormorant Garamond",Georgia,serif;margin:0 0 10px}
+.cb ul{list-style:none;margin:0;padding:0}
+.cb li{padding:6px 0 6px 28px;position:relative;font-size:16.5px;line-height:1.5}
+.cb li::before{position:absolute;left:0;top:6px;font-weight:700}
+.cb.in li::before{content:"\2713";color:#1f9d55}
+.cb.ex li::before{content:"\2715";color:#c0392b}
+.cta{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:22px 22px 0 0;box-shadow:0 -14px 40px -18px rgba(15,35,71,.5);animation:up .6s .3s ease both}
+@keyframes up{from{transform:translateY(110%)}to{transform:none}}
+.cta .pr{flex:1;line-height:1.15}.cta .pr b{display:block;font:600 26px "Cormorant Garamond",Georgia,serif;color:#0f2347}.cta .pr small{color:var(--mut);font-size:13px}
+.cta .wa{text-decoration:none;flex:none;width:48px;height:48px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 8px 18px -8px rgba(37,211,102,.9);transition:transform .25s}
+.cta .wa:active{transform:scale(.92)}
+.cta .go{flex:none;font:600 14px Jost,sans-serif;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:#0b1b3a;background:linear-gradient(135deg,#ecd49a,#c9a45c);border-radius:999px;padding:14px 20px;box-shadow:0 12px 26px -12px rgba(201,164,92,.9)}
+body.hascta{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.pn.show,.cta{animation:none}.rv{opacity:1;transform:none;transition:none}.dbody{transition:none}}
 </style>
 </head>
 <body>
 <div class="top"><a id="bk" href="./">&larr; Lapis Road</a><select id="ls" aria-label="Language"><option value="en">English</option><option value="ru">Русский</option><option value="ky">Кыргызча</option></select></div>
-<header class="hero" id="hero"><div class="brand">Lapis Road</div><h1 id="t">&nbsp;</h1><p class="sm" id="sm"></p></header>
+<header class="hero" id="hero"><div class="brand">Lapis Road</div><h1 id="t">&nbsp;</h1><p class="sm" id="sm"></p><div class="chips" id="chips"></div></header>
+<nav class="tabs" id="tabs" role="tablist" hidden></nav>
 <main class="w">
-<div class="story" id="story"></div>
-<h2 id="gh" hidden></h2>
-<div id="feed"></div>
+<section class="pn" id="p-ov"><div class="story" id="story"></div></section>
+<section class="pn" id="p-it" hidden></section>
+<section class="pn" id="p-cs" hidden></section>
+<section class="pn" id="p-gl"><h2 id="gh" hidden></h2><div id="feed"></div></section>
 </main>
+<div class="cta" id="cta" hidden><div class="pr"><b id="pb"></b><small id="ps"></small></div><a class="wa" id="wa" target="_blank" rel="noopener" aria-label="WhatsApp"><span style="font-size:24px;line-height:1" aria-hidden="true">💬</span></a><a class="go" id="go" href="./#map"></a></div>
 <footer><a href="./">Lapis Road</a></footer>
 <script>
 var API="https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev",$=function(i){return document.getElementById(i)};
-var U={en:{back:"Lapis Road",gal:"Photos and videos",none:"Photos and videos will appear here soon.",cm:"Comments",name:"Your name",wr:"Write a comment...",send:"Send",dl:"Download",nf:"This page was not found.",err:"Could not load. Please try again.",nocm:"No comments yet. Be the first."},
-ru:{back:"Lapis Road",gal:"Фото и видео",none:"Скоро здесь появятся фото и видео.",cm:"Комментарии",name:"Ваше имя",wr:"Напишите комментарий...",send:"Отправить",dl:"Скачать",nf:"Страница не найдена.",err:"Не удалось загрузить. Попробуйте ещё раз.",nocm:"Комментариев пока нет. Будьте первым."},
-ky:{back:"Lapis Road",gal:"Сүрөттөр жана видеолор",none:"Сүрөттөр жана видеолор жакында чыгат.",cm:"Комментарийлер",name:"Атыңыз",wr:"Комментарий жазыңыз...",send:"Жөнөтүү",dl:"Жүктөп алуу",nf:"Бул барак табылган жок.",err:"Жүктөлгөн жок. Кайра аракет кылыңыз.",nocm:"Азырынча комментарий жок. Биринчи болуңуз."}};
+var U={en:{back:"Lapis Road",gal:"Photos and videos",none:"Photos and videos will appear here soon.",cm:"Comments",name:"Your name",wr:"Write a comment...",send:"Send",dl:"Download",nf:"This page was not found.",err:"Could not load. Please try again.",nocm:"No comments yet. Be the first.",ov:"Overview",it:"Itinerary",cs:"Cost",xa:"Expand all",ca:"Collapse all",inc:"Included",exc:"Not included",day:"Day",days:"days",nights:"nights",lv_easy:"Easy",lv_moderate:"Moderate",lv_hard:"Hard",ty_group:"Group join tour",ty_private:"Private tour",pr:"/ adult",req:"Price on request",pl:"Plan this trip",hi:"Hello! I would like to ask about: ",soon:"Details coming soon."},
+ru:{back:"Lapis Road",gal:"Фото и видео",none:"Скоро здесь появятся фото и видео.",cm:"Комментарии",name:"Ваше имя",wr:"Напишите комментарий...",send:"Отправить",dl:"Скачать",nf:"Страница не найдена.",err:"Не удалось загрузить. Попробуйте ещё раз.",nocm:"Комментариев пока нет. Будьте первым.",ov:"Обзор",it:"Маршрут",cs:"Стоимость",xa:"Развернуть все",ca:"Свернуть все",inc:"Включено",exc:"Не включено",day:"День",days:"дн.",nights:"ноч.",lv_easy:"Лёгкий",lv_moderate:"Средний",lv_hard:"Сложный",ty_group:"Групповой тур",ty_private:"Индивидуальный тур",pr:"/ чел.",req:"Цена по запросу",pl:"Спланировать",hi:"Здравствуйте! Хочу спросить про: ",soon:"Подробности скоро."},
+ky:{back:"Lapis Road",gal:"Сүрөттөр жана видеолор",none:"Сүрөттөр жана видеолор жакында чыгат.",cm:"Комментарийлер",name:"Атыңыз",wr:"Комментарий жазыңыз...",send:"Жөнөтүү",dl:"Жүктөп алуу",nf:"Бул барак табылган жок.",err:"Жүктөлгөн жок. Кайра аракет кылыңыз.",nocm:"Азырынча комментарий жок. Биринчи болуңуз.",ov:"Сереп",it:"Маршрут",cs:"Баасы",xa:"Баарын ачуу",ca:"Баарын жабуу",inc:"Кирет",exc:"Кирбейт",day:"Күн",days:"күн",nights:"түн",lv_easy:"Жеңил",lv_moderate:"Орто",lv_hard:"Оор",ty_group:"Топко кошулуу туру",ty_private:"Жеке тур",pr:"/ адам",req:"Баасы суралганда",pl:"Пландоо",hi:"Саламатсызбы! Төмөнкү тур жөнүндө сурагым келет: ",soon:"Толук маалымат жакында."}};
 var L="en";try{L=localStorage.getItem("lang")||(navigator.language||"en").slice(0,2)}catch(e){}if(!U[L])L="en";
 var did="";try{did=localStorage.getItem("lr_did");if(!did){did="d"+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem("lr_did",did)}}catch(e){did="d"+Math.random().toString(36).slice(2)+Date.now().toString(36)}
 var id=new URLSearchParams(location.search).get("id")||"",P=null,ST=["😍","🔥","👏","😮","🙏"];
@@ -68,10 +114,40 @@ function pk(o){o=o||{};return o[L]||o.en||o.ru||o.ky||""}
 function nm(){try{return localStorage.getItem("lr_name")||""}catch(e){return""}}
 function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
 function api(p,b){return fetch(API+p,b?{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(b)}:undefined).then(function(r){if(!r.ok)throw r.status;return r.json()})}
+function tr(s){return(s||"").trim()}
+function parseIt(s){return tr(s).split(/\n\s*---+\s*\n/).map(function(b){var l=tr(b).split("\n"),t=tr(l.shift()),ch=[];if(l.length&&/^\s*#/.test(l[0]))ch=l.shift().replace(/^\s*#/,"").split("|").map(tr);return{t:t,ch:ch,d:tr(l.join("\n"))}}).filter(function(x){return x.t})}
+var ICO=["🚗","🕒","⛰️","🏠"],TAB="ov";
+function showTab(n){TAB=n;["ov","it","cs","gl"].forEach(function(k){var e=$("p-"+k);if(k===n){e.hidden=false;e.classList.remove("show");void e.offsetWidth;e.classList.add("show")}else e.hidden=true});
+ document.querySelectorAll("#tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.k===n)});window.scrollTo({top:Math.max(0,$("hero").offsetHeight-8),behavior:"smooth"})}
+function itin(){var b=$("p-it");b.innerHTML="";var days=parseIt(pk(P.it));if(!days.length)return;
+ var xa=el("div","xa"),xb=el("button","",t("xa"));xb.type="button";var open=false;xa.appendChild(xb);b.appendChild(xa);var all=[];
+ days.forEach(function(d,i){var c=el("div","day"+(i===0?" open":"")),h=el("button","dh");h.type="button";h.setAttribute("aria-expanded",i===0);
+  h.appendChild(el("span","dn",String(i+1).padStart(2,"0")));h.appendChild(el("span","dt",d.t));h.appendChild(el("span","dc","⌄"));
+  var bd=el("div","dbody"),w=el("div"),in2=el("div","di");
+  var cs=d.ch.map(function(x,k){return x&&x!=="-"?ICO[k]+" "+x:""}).filter(Boolean);if(cs.length){var m=el("div","dm");cs.forEach(function(x){m.appendChild(el("span","",x))});in2.appendChild(m)}
+  d.d.split(/\n\s*\n/).forEach(function(p){if(tr(p))in2.appendChild(el("p","",tr(p)))});
+  w.appendChild(in2);bd.appendChild(w);c.appendChild(h);c.appendChild(bd);b.appendChild(c);all.push(c);
+  h.onclick=function(){var o=c.classList.toggle("open");h.setAttribute("aria-expanded",o)}});
+ xb.onclick=function(){open=!open;all.forEach(function(c){c.classList.toggle("open",open);c.querySelector(".dh").setAttribute("aria-expanded",open)});xb.textContent=open?t("ca"):t("xa")}}
+function costs(){var b=$("p-cs");b.innerHTML="";var inc=[],exc=[];tr(pk(P.cost)).split("\n").forEach(function(l){l=tr(l);if(l[0]==="+")inc.push(tr(l.slice(1)));else if(l[0]==="-")exc.push(tr(l.slice(1)))});
+ if(!inc.length&&!exc.length)return;var g=el("div","cg");
+ [[inc,"in","inc"],[exc,"ex","exc"]].forEach(function(x){if(!x[0].length)return;var c=el("div","cb "+x[1]);c.appendChild(el("h3","",t(x[2])));var u=el("ul");x[0].forEach(function(y){u.appendChild(el("li","",y))});c.appendChild(u);g.appendChild(c)});b.appendChild(g)}
 function head(){document.documentElement.lang=L;$("ls").value=L;$("bk").textContent="← "+t("back");$("t").textContent=pk(P.n);$("sm").textContent=pk(P.s);document.title=pk(P.n)+" · Lapis Road";
- $("story").innerHTML="";pk(P.h).split(/\n\s*\n/).forEach(function(x){if(x.trim())$("story").appendChild(el("p","",x.trim()))});
+ var tour=P.kind==="tour";$("story").innerHTML="";pk(P.h).split(/\n\s*\n/).forEach(function(x){if(x.trim())$("story").appendChild(el("p","",x.trim()))});
  var c=P.media.filter(function(m){return m.t==="image"})[0];if(c)$("hero").style.backgroundImage="url("+API+"/media?id="+c.id+")";
- $("gh").hidden=false;$("gh").textContent=t("gal")}
+ $("gh").hidden=tour;$("gh").textContent=t("gal");
+ var ch=$("chips");ch.innerHTML="";$("tabs").hidden=true;$("cta").hidden=!tour;document.body.classList.toggle("hascta",tour);
+ if(!tour){["ov","gl"].forEach(function(k){$("p-"+k).hidden=false});$("p-it").hidden=true;$("p-cs").hidden=true;$("gh").hidden=false;return}
+ if(P.days)ch.appendChild(el("span","","📅 "+P.days+" "+t("days")+(P.days>1?" · "+(P.days-1)+" "+((P.days-1===1&&L==="en")?"night":t("nights")):"")));
+ if(P.level)ch.appendChild(el("span","","⛰ "+t("lv_"+P.level)));if(P.ttype)ch.appendChild(el("span","","👥 "+t("ty_"+P.ttype)));
+ itin();costs();
+ var hasOv=tr(pk(P.h)),tabs=[];if(hasOv)tabs.push("ov");if($("p-it").children.length)tabs.push("it");if($("p-cs").children.length)tabs.push("cs");tabs.push("gl");
+ var nav=$("tabs");nav.innerHTML="";tabs.forEach(function(k){var b=el("button","",k==="gl"?t("gal"):t(k));b.type="button";b.dataset.k=k;b.setAttribute("role","tab");b.onclick=function(){showTab(k)};nav.appendChild(b)});
+ nav.hidden=tabs.length<2;if(TAB!==""&&tabs.indexOf(TAB)<0)TAB=tabs[0];
+ if(!hasOv&&tabs.length===1&&!$("story").children.length){$("story").appendChild(el("p","m",t("soon")))}
+ ["ov","it","cs","gl"].forEach(function(k){$("p-"+k).hidden=k!==TAB});nav.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.k===TAB)});
+ var raw=P.price||"",num=/^[\$€£]?\s*[\d.,]+/.test(raw);$("pb").textContent=raw||t("req");$("ps").textContent=raw&&num?t("pr"):"";
+ $("go").textContent=t("pl");$("wa").href="https://wa.me/992008339207?text="+encodeURIComponent(t("hi")+pk(P.n))}
 function paint(card,m,x){
  var b=card.querySelector(".bar");b.innerHTML="";
  var lk=el("button","lk","");lk.setAttribute("aria-pressed",x.liked);lk.textContent=(x.liked?"❤️ ":"🤍 ")+x.likes;lk.setAttribute("aria-label","Like");lk.onclick=function(){api("/mlike",{pid:id,id:m.id,d:did}).then(function(r){paint(card,m,r)})};b.appendChild(lk);
@@ -87,10 +163,11 @@ function paint(card,m,x){
  var sb=el("button","",t("send"));sb.type="button";sb.onclick=function(){var a=n1.value.trim(),z=n2.value.trim();if(!a||!z)return;try{localStorage.setItem("lr_name",a)}catch(e){}sb.disabled=true;
   api("/mcomment",{pid:id,id:m.id,d:did,n:a,x:z}).then(function(r){box.classList.add("open");n2.value="";keep=["",""];paint(card,m,r);card.querySelector(".cm").classList.add("open");card.querySelector(".in2").value=""}).catch(function(){sb.disabled=false})};
  f.appendChild(n1);f.appendChild(n2);f.appendChild(sb);box.appendChild(f);if(op)box.classList.add("open")}
+var RO=window.IntersectionObserver?new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");RO.unobserve(x.target)}})},{threshold:.08}):null;
 function feed(){var F=$("feed");F.innerHTML="";if(!P.media.length){F.appendChild(el("p","m",t("none")));return}
  P.media.forEach(function(m){var card=el("div","card"),src=API+"/media?id="+m.id,v;
   if(m.t==="video"){v=el("video");v.controls=true;v.playsInline=true;v.preload="metadata";v.src=src}else{v=el("img");v.loading="lazy";v.alt=pk(P.n);v.src=src}
-  card.appendChild(v);card.appendChild(el("div","bar"));card.appendChild(el("div","cm"));F.appendChild(card);
+  card.appendChild(v);card.appendChild(el("div","bar"));card.appendChild(el("div","cm"));F.appendChild(card);if(window.IntersectionObserver){card.classList.add("rv");RO.observe(card)}else card.classList.add("in");
   paint(card,m,{likes:m.likes||0,liked:false,st:{},mine:"",comments:[]});
   api("/mx?id="+m.id+"&d="+encodeURIComponent(did)).catch(function(){return null}).then(function(r){if(r)paint(card,m,r)})})}
 $("ls").onchange=function(){L=$("ls").value;try{localStorage.setItem("lang",L)}catch(e){}head();feed()};

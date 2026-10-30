@@ -129,6 +129,34 @@ footer a{color:#e8cf94}
 .plan span{color:var(--mut);font-size:15px;line-height:1.4;display:block;margin-top:4px}
 .plan[aria-pressed=true]{border-color:#2f8f5b;box-shadow:0 0 0 3px rgba(47,143,91,.25)}
 .plan[aria-pressed=true] b::after{content:" \2713";color:#2f8f5b}
+</style><style id="tour-css">
+#tl .row{margin:0 0 14px}
+.tc{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:360px;margin:0 0 18px;border-radius:24px;overflow:hidden;color:#fff;text-decoration:none;isolation:isolate;background:linear-gradient(135deg,#14316b,#0b1b3a);box-shadow:0 22px 46px -26px rgba(15,35,71,.65);transition:transform .4s ease,box-shadow .4s ease}
+.tc::before{content:"";position:absolute;inset:0;z-index:-2;background:var(--img,radial-gradient(circle at 75% 20%,rgba(212,175,98,.45),transparent 45%)) center/cover;transition:transform 1.4s ease}
+.tc:hover::before,.tc:focus-visible::before{transform:scale(1.08)}
+.tc:hover{transform:translateY(-4px);box-shadow:0 30px 56px -26px rgba(15,35,71,.75)}
+.tc:active{transform:scale(.985)}
+.tc::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(rgba(8,18,40,.06) 20%,rgba(8,18,40,.35) 50%,rgba(8,18,40,.92))}
+.tc .tp{position:absolute;top:16px;left:16px;right:16px;display:flex;flex-wrap:wrap;gap:8px}
+.tc .tp span,.tc .tm span{font:500 13.5px Jost,sans-serif;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tc .tb{padding:22px}
+.tc h3{margin:0 0 6px;color:#fff;font:600 clamp(28px,8vw,36px)/1.02 "Cormorant Garamond",Georgia,serif}
+.tc p{margin:0 0 14px;color:rgba(255,255,255,.86);font-size:16px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tc .tf{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid rgba(255,255,255,.22);padding-top:14px}
+.tc .pr{font:600 22px/1.1 "Cormorant Garamond",Georgia,serif;color:#e8cf94}
+.tc .vb{font:600 12.5px Jost,sans-serif;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;background:#fff;color:#0b1b3a;border-radius:999px;padding:11px 16px;transition:transform .3s}
+.tc:hover .vb{transform:translateX(4px)}
+.tc.cu{min-height:240px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+@media (min-width:720px){.sg{grid-template-columns:repeat(3,1fr)}}
+.sc{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px 16px;box-shadow:0 18px 40px -28px rgba(15,35,71,.5);transition:transform .3s,box-shadow .3s}
+.sc:hover{transform:translateY(-4px);box-shadow:0 26px 46px -26px rgba(15,35,71,.55)}
+.sc i{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#14316b,#0b1b3a);font-style:normal;font-size:26px;margin-bottom:14px;box-shadow:0 0 0 4px rgba(212,175,98,.38);animation:fl 5s ease-in-out infinite}
+.sc:nth-child(2n) i{animation-delay:-1.6s}.sc:nth-child(3n) i{animation-delay:-3.1s}
+@keyframes fl{50%{transform:translateY(-5px)}}
+.sc b{display:block;font:600 23px/1.1 "Cormorant Garamond",Georgia,serif;margin-bottom:6px}
+.sc span{display:block;color:var(--mut);font-size:15px;line-height:1.4}
+@media (prefers-reduced-motion:reduce){.sc i{animation:none}.tc,.tc::before{transition:none}}
 </style></head>
 <body class="locked">
 <div id="gate"><div class="g">
@@ -188,11 +216,14 @@ footer a{color:#e8cf94}
 <section id="tours"><div class="wrap">
 <h2>Trips</h2>
 <p class="lead">Every trip includes a local guide, a driver and guesthouse stays. Final price depends on group size and season.</p>
-<div class="row"><h3>Sarazm and Penjikent trip</h3><span class="meta">3 days · Price on request</span><p>Ancient Sarazm, Penjikent and a night in a local guesthouse.</p></div>
+<div id="tl"><div class="row"><h3>Sarazm and Penjikent trip</h3><span class="meta">3 days · Price on request</span><p>Ancient Sarazm, Penjikent and a night in a local guesthouse.</p></div>
 <div class="row"><h3>Dushanbe and Hissar</h3><span class="meta">2 days · Price on request</span><p>City walk, bazaar, Hissar Fortress and a home-cooked dinner.</p></div>
 <div class="row"><h3>Silk Road and Wakhan forts</h3><span class="meta">10 days · Price on request</span><p>Dushanbe to Khorog and the Wakhan Valley, with ancient forts along the way.</p></div>
 <div class="row"><h3>Custom trip</h3><span class="meta">Any length</span><p>Tell us your dates and interests and we plan it with you.</p></div>
+</div>
 </div></section>
+
+<section id="svc"><div class="wrap"><h2 id="svh"></h2><div class="sg" id="sg"></div></div></section>
 
 <section id="info"><div class="wrap">
 <h2>Before you come</h2>
@@ -465,9 +496,36 @@ document.querySelectorAll(".row[data-pid]").forEach(function(r){r.tabIndex=0;r.s
 document.addEventListener("click",function(e){var r=e.target.closest&&e.target.closest(".row[data-pid]");if(r)go(r)});
 document.addEventListener("keydown",function(e){if(e.key==="Enter"){var r=e.target.closest&&e.target.closest(".row[data-pid]");if(r)go(r)}});
 function draw(){if(!box)return;box.querySelectorAll(".row.dyn").forEach(function(x){x.remove()});
- list.forEach(function(x){if(!x.custom)return;var r=document.createElement("div");r.className="row dyn";r.setAttribute("data-pid",x.id);r.tabIndex=0;r.setAttribute("role","link");
+ list.forEach(function(x){if(!x.custom||x.kind==="tour")return;var r=document.createElement("div");r.className="row dyn";r.setAttribute("data-pid",x.id);r.tabIndex=0;r.setAttribute("role","link");
   var h=document.createElement("h3");h.textContent=pk(x.n);var p=document.createElement("p");p.textContent=pk(x.s);r.appendChild(h);r.appendChild(p);box.appendChild(r)})}
 fetch(API+"/places").then(function(r){return r.json()}).then(function(a){list=a;draw()}).catch(function(){});
 var ls=document.getElementById("ls");if(ls)ls.addEventListener("change",function(){setTimeout(draw,0)});
+})();</script><script>(function(){var API="https://withered-mountain-c40e.abdurahmanovmustafa2.workers.dev",$=function(i){return document.getElementById(i)},tours=null;
+var TX={en:{svh:"What we arrange",view:"View details",req:"Price on request",days:"days",nights:"nights",lv_easy:"Easy",lv_moderate:"Moderate",lv_hard:"Hard",ty_group:"Group join tour",ty_private:"Private tour",cn:"Custom trip",cd:"Tell us your dates and interests and we plan it with you.",cb:"Plan with us"},
+ru:{svh:"Что мы организуем",view:"Подробнее",req:"Цена по запросу",days:"дн.",nights:"ноч.",lv_easy:"Лёгкий",lv_moderate:"Средний",lv_hard:"Сложный",ty_group:"Групповой тур",ty_private:"Индивидуальный тур",cn:"Свой маршрут",cd:"Расскажите о датах и интересах, и мы составим маршрут вместе.",cb:"Составить"},
+ky:{svh:"Биз эмнени уюштурабыз",view:"Толугу менен",req:"Баасы суралганда",days:"күн",nights:"түн",lv_easy:"Жеңил",lv_moderate:"Орто",lv_hard:"Оор",ty_group:"Топко кошулуу туру",ty_private:"Жеке тур",cn:"Өз маршрутум",cd:"Күндөрүңүздү жана кызыгууңузду айтыңыз, биз чогуу пландайбыз.",cb:"Пландоо"}};
+var SV=[["🚗",{en:"Transport and 4x4",ru:"Транспорт и 4x4",ky:"Унаа жана 4x4"},{en:"Reliable 4WD vehicles with local partner drivers. Safety comes first.",ru:"Надёжные внедорожники и местные водители-партнёры. Безопасность прежде всего.",ky:"Ишенимдүү 4x4 унаалар жана жергиликтүү өнөктөш айдоочулар. Коопсуздук биринчи."}],
+["🧭",{en:"Local guides",ru:"Местные гиды",ky:"Жергиликтүү гиддер"},{en:"Guides who know every valley, village and story.",ru:"Гиды, которые знают каждую долину, село и историю.",ky:"Ар бир өрөөндү, айылды жана окуяны билген гиддер."}],
+["🏡",{en:"Homestays and guesthouses",ru:"Гостевые дома",ky:"Конок үйлөр"},{en:"Warm local homes, guesthouses and hotels.",ru:"Тёплые местные дома, гостевые дома и отели.",ky:"Жылуу үйлөр, конок үйлөр жана мейманканалар."}],
+["🥾",{en:"Walks and hikes",ru:"Прогулки и походы",ky:"Сейилдөө жана жүрүштөр"},{en:"From easy village walks to mountain hikes.",ru:"От лёгких прогулок до горных походов.",ky:"Жеңил айыл сейилинен тоо жүрүшүнө чейин."}],
+["🛂",{en:"Permits and visa help",ru:"Разрешения и виза",ky:"Уруксат жана виза"},{en:"We help with e-visa questions and the Pamir permit.",ru:"Помогаем с вопросами e-visa и разрешением на Памир.",ky:"e-visa суроолорунда жана Памир уруксатында жардам беребиз."}],
+["🍲",{en:"Local food",ru:"Местная кухня",ky:"Жергиликтүү тамак"},{en:"Home-cooked meals and real local hospitality.",ru:"Домашняя кухня и настоящее гостеприимство.",ky:"Үй тамагы жана чыныгы меймандостук."}]];
+function L(){var l=document.documentElement.lang||"en";return TX[l]?l:"en"}
+function pk(o){o=o||{};return o[L()]||o.en||o.ru||o.ky||""}
+function t(k){return TX[L()][k]}
+function nt(n){return n===1&&L()==="en"?"night":t("nights")}
+function e(tag,cls,txt){var x=document.createElement(tag);if(cls)x.className=cls;if(txt!=null)x.textContent=txt;return x}
+var RO=window.IntersectionObserver?new IntersectionObserver(function(a){a.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");RO.unobserve(x.target)}})},{threshold:.1}):null;
+function rv(x){if(RO&&!matchMedia("(prefers-reduced-motion:reduce)").matches){x.classList.add("rv");RO.observe(x)}}
+function cards(){if(!tours)return;var box=$("tl");box.textContent="";
+ tours.forEach(function(p){var a=e("a","tc");a.href="place.html?id="+encodeURIComponent(p.id);if(p.cover)a.style.setProperty("--img","url("+API+"/media?id="+p.cover+")");
+  var tp=e("div","tp");if(p.days)tp.appendChild(e("span","","📅 "+p.days+" "+t("days")+(p.days>1?" · "+(p.days-1)+" "+nt(p.days-1):"")));if(p.level)tp.appendChild(e("span","","⛰ "+t("lv_"+p.level)));if(p.ttype)tp.appendChild(e("span","","👥 "+t("ty_"+p.ttype)));
+  var b=e("div","tb");b.appendChild(e("h3","",pk(p.n)));b.appendChild(e("p","",pk(p.s)));
+  var f=e("div","tf");f.appendChild(e("span","pr",p.price||t("req")));f.appendChild(e("span","vb",t("view")+" →"));b.appendChild(f);a.appendChild(tp);a.appendChild(b);box.appendChild(a);rv(a)});
+ var c=e("a","tc cu");c.href="#contact";var b=e("div","tb");b.appendChild(e("h3","",t("cn")));b.appendChild(e("p","",t("cd")));var f=e("div","tf");f.appendChild(e("span","pr",""));f.appendChild(e("span","vb",t("cb")+" →"));b.appendChild(f);c.appendChild(b);box.appendChild(c);rv(c)}
+function svc(){$("svh").textContent=t("svh");var g=$("sg");g.textContent="";SV.forEach(function(x){var c=e("div","sc"),i=e("i","",x[0]);i.setAttribute("aria-hidden","true");c.appendChild(i);c.appendChild(e("b","",pk(x[1])));c.appendChild(e("span","",pk(x[2])));g.appendChild(c);rv(c)})}
+svc();
+fetch(API+"/places").then(function(r){return r.json()}).then(function(a){tours=a.filter(function(x){return x.kind==="tour"});if(tours.length)cards()}).catch(function(){});
+var ls=$("ls");if(ls)ls.addEventListener("change",function(){setTimeout(function(){svc();cards()},0)});
 })();</script></body>
 </html>
